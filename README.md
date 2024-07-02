@@ -1,7 +1,7 @@
 # HTB-Usage-Blind-SQLI
 Script para explotar un SQLI Blind Boolean-based en la máquina Usage de Hack The Box
 
-Este script ha sido diseñado específicamente para funcionar en la máquina "Usage" de Hack The Box (HTB). Sin embargo, con modificaciones adecuadas en el código, puede adaptarse para ser utilizado en otras situaciones. **Es extremadamente importante** recordar que este tipo de herramientas deben ser empleadas únicamente en entornos controlados y con el debido permiso.
+Este script ha sido diseñado específicamente para funcionar en la máquina "Usage" de Hack The Box (HTB). **Es extremadamente importante** recordar que este tipo de herramientas deben ser empleadas únicamente en entornos controlados y con el debido permiso.
 
 ## Advertencia
 
